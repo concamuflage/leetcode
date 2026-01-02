@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Optional
 # Definition for singly-linked list.
 class ListNode:
@@ -12,57 +13,44 @@ class Solution:
             return list2
         if list2 is None:
             return list1
-        # neither of the two lists is empty,splice them
-        
-        current_node_1 = list1
-        current_node_2 = list2
-        next_current_node_1 = list1.next
-        next_current_node_2 = list2.next
 
+        list1_pointer = list1
+        list2_pointer = list2
+        if list2_pointer.val <= list1_pointer.val:
+            head = list2_pointer
+            list2_pointer = list2_pointer.next
+        else:
+            head = list1_pointer
+            list1_pointer = list1_pointer.next
+        prev = head
 
-        while current_node_1.next is not None and current_node_2.next is not None:
-                # in each iteration, 3 values are going to be compared.
-                # current_node_2,current_node_1, and the smaller node's next node
-                # splice list2 into list1
-                smaller = current_node_1
-                bigger = current_node_2
-                current_node_2 = current_node_2.next
-                current_node_1 = current_node_1.next
-                smaller_next = smaller.next
+        while list2_pointer is not None and list1_pointer is not None:
+            if list2_pointer.val == list1_pointer.val:
+                prev.next = list2_pointer
+                prev = prev.next
+                list2_pointer = list2_pointer.next
 
+                prev.next = list1_pointer
+                prev = prev.next
+                list1_pointer = list1_pointer.next
 
-                end.next = smaller
-                end = bigger
+            elif list2_pointer.val < list1_pointer.val:
+                prev.next = list2_pointer
+                list2_pointer = list2_pointer.next
+                prev = prev.next
 
             else:
-                # splice list1 into list2
-    
-    def compare_first_three_nodes(node1:ListNode, node2:ListNode) -> ListNode:
-        # this function take 2 nodes 
-        # then it compares node1, node2, and the next node of min(node1,node2)
-        # it generates a list of 2
-        # returns the correct tail.
+                prev.next = list1_pointer
+                list1_pointer = list1_pointer.next
+                prev = prev.next
+        if list1_pointer is not None:
+            prev.next = list1_pointer
+        if list2_pointer is not None:
+            prev.next = list2_pointer
+        return head
 
-        current_node_1 = node1
-        current_node_2 = node2
 
-        if node1.val < node2.val:
-            smaller = node1
-            bigger = node2
-        else: 
-            smaller = node2
-            bigger = node1
-        candidate = smaller.next
-        if candidate is not None:
-            # compare candidate with bigger
-            if candidate >= bigger:
-                smaller.next = bigger
-            
-        else:
-            smaller.next = bigger  
-        tail = smaller.next 
 
-        return tail,current_node_1,current_node_2
 
 
             
